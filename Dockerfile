@@ -1,15 +1,17 @@
-FROM node:8
+FROM node:10-alpine
 
-# Create app directory
-WORKDIR /usr/src/app
+RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
 
+WORKDIR /home/node/app
 
 COPY package*.json ./
 
-RUN npm install
-# If you are building your code for production
-# RUN npm ci --only=production
+USER node
 
+RUN npm install
+
+COPY --chown=node:node . .
 
 EXPOSE 8080
-CMD [ "npm", "start" ]
+
+CMD [ "node", "app.js" ]
